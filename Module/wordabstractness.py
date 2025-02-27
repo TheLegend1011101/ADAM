@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from pathlib import Path
+from .auxiliary.modeljoiner import join_word2vec_parts
 model_path = Path(__file__).resolve().parent.parent / "data" / "word_concreteness.csv"
 
 
@@ -20,11 +21,16 @@ from sklearn.linear_model import LogisticRegression
 from gensim.models import KeyedVectors
 
 
-model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model"
+model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model.vectors.npy"
 
 # print(f"Loading Word2Vec model from: {model_path}")
 if not model_path.exists():
+    join_word2vec_parts()
+
+model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model"
+if not model_path.exists():
     raise FileNotFoundError(f"Model file not found at {model_path}")
+
 
 word2vec_model = KeyedVectors.load(str(model_path))
 
@@ -90,9 +96,9 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 # # Compute confusion matrix
-# cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred)
 
-# # Plot the matrix
+# Plot the matrix
 # plt.figure(figsize=(5,5))
 # sns.heatmap(cm, annot=True, fmt='d', cmap="Blues", xticklabels=["Concrete", "Abstract"], yticklabels=["Concrete", "Abstract"])
 # plt.xlabel("Predicted")

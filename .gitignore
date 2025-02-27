@@ -6,3 +6,4 @@ env/
 __pycache__/
 pip-log.txt
 pip-delete-this-directory.txt
+data/word2vec_500k.model.vectors.npy
