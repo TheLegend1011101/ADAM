@@ -5,9 +5,6 @@ from .auxiliary.modeljoiner import join_word2vec_parts
 model_path = Path(__file__).resolve().parent.parent / "data" / "word_concreteness.csv"
 
 
-# print(f"Looking for model file at: {model_path}")
-
-
 try:
     df = pd.read_csv(model_path)
 except FileNotFoundError:
@@ -49,22 +46,6 @@ for word in concrete_words:
 
 clf = LogisticRegression()
 clf.fit(X_train, y_train)
-
-
-
-# Test the classifier
-# print(is_abstract("love"))   # Expected: True (abstract)
-# print(is_abstract("table"))  # Expected: False (concrete)
-# print(is_abstract("idea"))   # Expected: True (abstract)
-# print(is_abstract("bottle")) # Expected: False (concrete)
-# print(is_abstract("dog")) 
-# print(is_abstract("honesty"))
-# print(is_abstract("if"))
-
-# while True:
-#     word = input("Enter a word: ")
-#     print(is_abstract(word))
-
 
 from sklearn.model_selection import train_test_split
 
@@ -138,24 +119,24 @@ def clean_input_text(input_text):
 
 
 
-# Function to classify words
+
 def is_abstract(word):
     if word in word2vec_model:
         vector = word2vec_model[word].reshape(1, -1)
-        return clf.predict(vector)[0] == 1  # Returns True if abstract
-    return None  # Word not in model
+        return clf.predict(vector)[0] == 1  
+    return None  
 
 def text_abstract_ratio(text):
     abstract_count = 0
     total_words = 0
     text = clean_input_text(text)
     for word in text.split():
-        if word in word2vec_model:  # Only count words found in Word2Vec
+        if word in word2vec_model:  
             total_words += 1
             if is_abstract(word):
                 abstract_count += 1
 
-    return (abstract_count / total_words * 700) if total_words > 0 else None  # Avoid division by zero
+    return (abstract_count / total_words * 700) if total_words > 0 else None  
 
 
 import numpy as np
