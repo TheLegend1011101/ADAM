@@ -15,6 +15,8 @@ concrete_words = df[df["Conc.M"] > 4]["Word"].sample(1500, random_state=42).toli
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 from gensim.models import KeyedVectors
 
 

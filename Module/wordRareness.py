@@ -54,7 +54,7 @@ def wordRareness(word, min_frequency = 1e-8):
     rareness_score = 1/frequency 
     
     return rareness_score
-print(wordRareness("xzyqz"))
+# print(wordRareness("xzyqz"))
 def text_rareness_score(text):
     """
     Calculates the overall rareness and complexity score of a given text.
@@ -84,12 +84,12 @@ def text_rareness_score(text):
     max_rareness_score = max(rareness_scores)
     
     # Scale the average score between the desired range
-    # normalized_score = min_rareness + (max_rareness - min_rareness) * (average_rareness / 100)  # Adjust the divisor
-    normalized_score = (average_rareness-min_rareness_score)/(max_rareness_score-min_rareness_score)
+    normalized_score = min_rareness + (max_rareness - min_rareness) * (average_rareness / 100)  # Adjust the divisor
+    # normalized_score = (average_rareness-min_rareness_score)/(max_rareness_score-min_rareness_score)
     
     return normalized_score
 
 # Example usage:
-text = "thout wight thout thout thout thout thout thout thout Uhtceare."
-rareness_score = text_rareness_score(text)
-print(f"Rareness/Complexity score of the text: {rareness_score}")
+# text = "thout wight thout thout thout thout thout thout thout Uhtceare."
+# rareness_score = text_rareness_score(text)
+# print(f"Rareness/Complexity score of the text: {rareness_score}")
