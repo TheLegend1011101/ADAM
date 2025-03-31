@@ -28,9 +28,9 @@ except FileNotFoundError:
     exit()
 
 # Calculate AoA for a passage
-def calculate_aoa(text, aoa_directory):
+def calculate_aoa(text):
     tokens = word_tokenize(text.lower())  
-    print("Number of words in AoA directory:", len(aoa_directory))  
+    # print("Number of words in AoA directory:", len(aoa_directory))  
     
     total_aoa = 0  
     count = 0  

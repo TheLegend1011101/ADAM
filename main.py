@@ -1,8 +1,7 @@
 import sys
 import os
 
-from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity
-import re
+from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words
 
 def clean_text(text):
     # Remove punctuation
@@ -47,6 +46,19 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
             text_rareness = text_rareness_score(file_content)
             f.write(f"Average Rareness Score: {text_rareness[0]}")
             f.write(f"\nIndividual Rareness Scores: {text_rareness[1]}")
+        with open(os.path.join(output_dir, f"{filename}_acquisition.txt"), "w", encoding="utf-8") as f:
+            aoa_score = calculate_aoa(file_content)
+            f.write(f"Average Age of Acquisition (AoA) for the passage: {aoa_score}")
+        with open(os.path.join(output_dir, f"{filename}_decoding_demand.txt"), "w", encoding="utf-8") as f:
+            decoding_demand_score = decoding_demand(file_content)[0]
+            f.write(f"Decoding Demand: {decoding_demand_score}")
+        with open(os.path.join(output_dir, f"{filename}_sight_word.txt"), "w", encoding="utf-8") as f:
+            sight_word_count = count_sight_words(file_content)
+            f.write(f"Number of Sight Words: {sight_word_count}")
+        with open(os.path.join(output_dir, f"{filename}_syllable_count.txt"), "w", encoding="utf-8") as f:
+            syllable_count = count_syllables_in_words(file_content)
+            f.write(f"Total number of syllables in the text: {syllable_count}")
+
         print(f"Finished processing all functions for: {filepath}")
 
     elif function_name == "abstract":
@@ -72,6 +84,30 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
             f.write(f"Average Rareness Score: {text_rareness[0]}")
             f.write(f"\nIndividual Rareness Scores: {text_rareness[1]}")
         print(f"Finished rareness for: {filepath}")
+
+    elif function_name == "acquisition":
+        with open(os.path.join(output_dir, f"{filename}_acquisition.txt"), "w", encoding="utf-8") as f:
+            aoa_score = calculate_aoa(file_content)
+            f.write(f"Average Age of Acquisition (AoA) for the passage: {aoa_score}")
+        print(f"Finished acquisition for: {filepath}")
+
+    elif function_name == "decoding_demand":
+        with open(os.path.join(output_dir, f"{filename}_decoding_demand.txt"), "w", encoding="utf-8") as f:
+            decoding_demand_score = decoding_demand(file_content)[0]
+            f.write(f"Decoding Demand: {decoding_demand_score}")
+        print(f"Finished decoding demand for: {filepath}")
+    
+    elif function_name == "sight_word":
+        with open(os.path.join(output_dir, f"{filename}_sight_word.txt"), "w", encoding="utf-8") as f:
+            sight_word_count = count_sight_words(file_content)
+            f.write(f"Number of Sight Words: {sight_word_count}")
+        print(f"Finished sight word for: {filepath}")
+    
+    elif function_name == "syllable_count":
+        with open(os.path.join(output_dir, f"{filename}_syllable_count.txt"), "w", encoding="utf-8") as f:
+            syllable_count = count_syllables_in_words(file_content)
+            f.write(f"Total number of syllables in the text: {syllable_count}")
+        print(f"Finished syllable count for: {filepath}")
 
     else:
         print(f"Error: Invalid function name: {function_name}")

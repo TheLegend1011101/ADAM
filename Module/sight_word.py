@@ -22,7 +22,7 @@ except FileNotFoundError:
     exit()
 
 
-def count_sight_words(text, sight_words):
+def count_sight_words(text):
     words = re.findall(r'\b\w+\b', text.lower())  
     for word in words:
         if word in sight_words:
