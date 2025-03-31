@@ -22,7 +22,6 @@ from gensim.models import KeyedVectors
 
 model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model.vectors.npy"
 
-# print(f"Loading Word2Vec model from: {model_path}")
 if not model_path.exists():
     join_word2vec_parts()
 
@@ -67,33 +66,13 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 
 
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f"Model Accuracy: {accuracy:.4f}")
-
-
-# print(classification_report(y_test, y_pred))
-
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
-# # Compute confusion matrix
 cm = confusion_matrix(y_test, y_pred)
 
-# Plot the matrix
-# plt.figure(figsize=(5,5))
-# sns.heatmap(cm, annot=True, fmt='d', cmap="Blues", xticklabels=["Concrete", "Abstract"], yticklabels=["Concrete", "Abstract"])
-# plt.xlabel("Predicted")
-# plt.ylabel("Actual")
-# plt.title("Confusion Matrix")
-# plt.show()
 
-
-# from sklearn.model_selection import cross_val_score
-
-# cv_scores = cross_val_score(clf, X, y, cv=5)  # 5-fold cross-validation
-# print(f"Cross-Validation Accuracy: {np.mean(cv_scores):.4f} ± {np.std(cv_scores):.4f}")
 
 
 def strip_character(a_string):

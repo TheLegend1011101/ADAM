@@ -78,8 +78,3 @@ def plot_miop_across_chunks(text, chunk_size=125):
     plt.grid(True)
     plt.show()
 
-
-
-# words = ["banana", "bug", "abababab", "abcdefg", "asasa"]
-# for word in words:
-#     print(f"MIOP Score for '{word}': {compute_miop(word):.4f}")
