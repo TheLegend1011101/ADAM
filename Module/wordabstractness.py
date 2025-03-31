@@ -1,10 +1,8 @@
 import pandas as pd
 import re
 from pathlib import Path
+from .auxiliary.modeljoiner import join_word2vec_parts
 model_path = Path(__file__).resolve().parent.parent / "data" / "word_concreteness.csv"
-
-
-# print(f"Looking for model file at: {model_path}")
 
 
 try:
@@ -17,14 +15,20 @@ concrete_words = df[df["Conc.M"] > 4]["Word"].sample(1500, random_state=42).toli
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 from gensim.models import KeyedVectors
 
 
-model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model"
+model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model.vectors.npy"
 
-# print(f"Loading Word2Vec model from: {model_path}")
+if not model_path.exists():
+    join_word2vec_parts()
+
+model_path = Path(__file__).resolve().parent.parent / "data" / "word2vec_500k.model"
 if not model_path.exists():
     raise FileNotFoundError(f"Model file not found at {model_path}")
+
 
 word2vec_model = KeyedVectors.load(str(model_path))
 
@@ -44,22 +48,6 @@ for word in concrete_words:
 clf = LogisticRegression()
 clf.fit(X_train, y_train)
 
-
-
-# Test the classifier
-# print(is_abstract("love"))   # Expected: True (abstract)
-# print(is_abstract("table"))  # Expected: False (concrete)
-# print(is_abstract("idea"))   # Expected: True (abstract)
-# print(is_abstract("bottle")) # Expected: False (concrete)
-# print(is_abstract("dog")) 
-# print(is_abstract("honesty"))
-# print(is_abstract("if"))
-
-# while True:
-#     word = input("Enter a word: ")
-#     print(is_abstract(word))
-
-
 from sklearn.model_selection import train_test_split
 
 import numpy as np
@@ -78,33 +66,13 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 
 
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f"Model Accuracy: {accuracy:.4f}")
-
-
-# print(classification_report(y_test, y_pred))
-
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
-# # Compute confusion matrix
-# cm = confusion_matrix(y_test, y_pred)
-
-# # Plot the matrix
-# plt.figure(figsize=(5,5))
-# sns.heatmap(cm, annot=True, fmt='d', cmap="Blues", xticklabels=["Concrete", "Abstract"], yticklabels=["Concrete", "Abstract"])
-# plt.xlabel("Predicted")
-# plt.ylabel("Actual")
-# plt.title("Confusion Matrix")
-# plt.show()
+cm = confusion_matrix(y_test, y_pred)
 
 
-# from sklearn.model_selection import cross_val_score
-
-# cv_scores = cross_val_score(clf, X, y, cv=5)  # 5-fold cross-validation
-# print(f"Cross-Validation Accuracy: {np.mean(cv_scores):.4f} ± {np.std(cv_scores):.4f}")
 
 
 def strip_character(a_string):
@@ -132,24 +100,24 @@ def clean_input_text(input_text):
 
 
 
-# Function to classify words
+
 def is_abstract(word):
     if word in word2vec_model:
         vector = word2vec_model[word].reshape(1, -1)
-        return clf.predict(vector)[0] == 1  # Returns True if abstract
-    return None  # Word not in model
+        return clf.predict(vector)[0] == 1  
+    return None  
 
 def text_abstract_ratio(text):
     abstract_count = 0
     total_words = 0
     text = clean_input_text(text)
     for word in text.split():
-        if word in word2vec_model:  # Only count words found in Word2Vec
+        if word in word2vec_model:  
             total_words += 1
             if is_abstract(word):
                 abstract_count += 1
 
-    return (abstract_count / total_words * 700) if total_words > 0 else None  # Avoid division by zero
+    return (abstract_count / total_words * 700) if total_words > 0 else None  
 
 
 import numpy as np

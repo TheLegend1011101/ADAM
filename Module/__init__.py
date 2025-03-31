@@ -1,2 +1,4 @@
 from .wordabstractness import *
-# from .wordRareness import *
+from .meanInternalOrthographicProbability import *
+from .wordRareness import *
+from .OrthographicLevenshtein import *
