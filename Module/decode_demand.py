@@ -28,7 +28,6 @@ def decoding_demand(text):
         score = 0
         word_length = len(word)
 
-        # Word length factor
         if word_length <= 4:
             score += 1
         elif word_length <= 6:
@@ -36,14 +35,11 @@ def decoding_demand(text):
         else:
             score += 3
 
-        # Syllable factor
         score += max(0, count_syllables(word) - 1)
 
-        # High-frequency word adjustment
         if word in high_freq_words:
             score -= 1
 
-        # Complex letter sequences
         if re.search(r"(ph|ough|tion|tious|ious|gue)", word):
             score += 1
 
