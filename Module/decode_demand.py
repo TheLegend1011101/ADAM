@@ -4,16 +4,6 @@ import syllapy
 high_freq_words = {"the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are",
                    "as", "with", "his", "they", "I", "at", "be", "this", "have", "from", "or", "one", "had", "by"}
 
-try:
-    with open("Passage1.txt", "r") as f:
-        data = f.read()
-except FileNotFoundError:
-    print("File not found")
-    exit()
-
-print("Passage content:\n")
-#print(data)
-
 
 def count_syllables(word):
     return syllapy.count(word)
@@ -48,8 +38,4 @@ def decoding_demand(text):
 
     return total_demand, word_scores
 
-text = "The explanation of phonetic syllables in comprehension is quite difficult."
-total_score, word_demand = decoding_demand(text)
 
-print(f"Total Decoding Demand: {total_score}")
-print("Word-wise Decoding Scores:", word_demand)
