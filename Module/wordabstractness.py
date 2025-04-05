@@ -15,8 +15,6 @@ concrete_words = df[df["Conc.M"] > 4]["Word"].sample(1500, random_state=42).toli
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier
 from gensim.models import KeyedVectors
 
 
@@ -56,9 +54,6 @@ y = np.array(y_train)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
 
-
-from sklearn.metrics import accuracy_score, classification_report
-
 clf = LogisticRegression()
 clf.fit(X_train, y_train)
 
@@ -68,35 +63,33 @@ y_pred = clf.predict(X_test)
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import confusion_matrix
-
-cm = confusion_matrix(y_test, y_pred)
 
 
 
 
-def strip_character(a_string):
-    r = re.compile(r"[^a-zA-Z- ]")
-    return r.sub(' ', a_string)
 
-def remove_spaces(a_string):
-    return re.sub(' +', ' ', a_string)
+# def strip_character(a_string):
+#     r = re.compile(r"[^a-zA-Z- ]")
+#     return r.sub(' ', a_string)
 
-def remove_apos_s(a_string):
-    return re.sub("'s", '', a_string)
+# def remove_spaces(a_string):
+#     return re.sub(' +', ' ', a_string)
 
-def clean_input_text(input_text):
-    # convert input to lowercase
-    input_text = input_text.lower()
-    # remove apostrophe-s from words
-    input_text = remove_apos_s(input_text)
-    # strip non-essential characters
-    input_text = strip_character(input_text)
-    # remove internal spaces
-    input_text = remove_spaces(input_text)
-    # remove end spaces
-    input_text = input_text.strip()
-    return input_text
+# def remove_apos_s(a_string):
+#     return re.sub("'s", '', a_string)
+
+# def clean_input_text(input_text):
+#     # convert input to lowercase
+#     input_text = input_text.lower()
+#     # remove apostrophe-s from words
+#     input_text = remove_apos_s(input_text)
+#     # strip non-essential characters
+#     input_text = strip_character(input_text)
+#     # remove internal spaces
+#     input_text = remove_spaces(input_text)
+#     # remove end spaces
+#     input_text = input_text.strip()
+#     return input_text
 
 
 
@@ -110,7 +103,7 @@ def is_abstract(word):
 def text_abstract_ratio(text):
     abstract_count = 0
     total_words = 0
-    text = clean_input_text(text)
+    # text = clean_input_text(text)
     for word in text.split():
         if word in word2vec_model:  
             total_words += 1

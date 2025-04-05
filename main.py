@@ -1,6 +1,6 @@
 import sys
 import os
-
+import re
 from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words
 
 def clean_text(text):

@@ -1,13 +1,20 @@
 import nltk
 import pandas as pd
 from nltk.tokenize import word_tokenize
+from pathlib import Path
 
 # Load AoA data
-aoa_df = pd.read_giexcel('AoA_51715_words.xlsx')
+model_path = Path(__file__).resolve().parent.parent / "data" / "AoA_51715_words.xlsx"
+if not model_path.exists():
+    raise FileNotFoundError(f"Model file not found at {model_path}")
+    exit()
+aoa_df = pd.read_excel(model_path)
+if aoa_df.empty:
+    raise ValueError("AoA data is empty")
 
 # Keep only relevant columns
 aoa_df = aoa_df[['Word', 'AoA_Kup_lem']]
-print("Size of AoA dataframe: ", aoa_df.shape)
+# print("Size of AoA dataframe: ", aoa_df.shape)
 
 # Create AoA lookup dictionary
 aoa_directory = {}
@@ -19,13 +26,6 @@ for _, row in aoa_df.iterrows():
         word = word.lower()
         aoa_directory[word] = row['AoA_Kup_lem'] 
 
-# Load passage
-try:
-    with open("Passage1.txt", "r") as f:
-        data = f.read()
-except FileNotFoundError:
-    print("File not found")
-    exit()
 
 # Calculate AoA for a passage
 def calculate_aoa(text):
@@ -37,7 +37,7 @@ def calculate_aoa(text):
     
     for word in tokens:
         if word in aoa_directory:
-            print(f"Found: {word} → {aoa_directory[word]}") 
+            # print(f"Found: {word} → {aoa_directory[word]}") 
             total_aoa += aoa_directory[word]  # Add AoA score
             count += 1  # Increment count
     
@@ -46,7 +46,3 @@ def calculate_aoa(text):
     
     return total_aoa / count  # Compute the average AoA
 
-# Compute AoA for passage
-aoa_score = calculate_aoa(data, aoa_directory)
-
-print(f"Average Age of Acquisition (AoA) for the passage: {aoa_score}")
