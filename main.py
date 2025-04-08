@@ -1,7 +1,7 @@
 import sys
 import os
 import re
-from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words
+from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity
 
 def clean_text(text):
     # Remove punctuation
@@ -58,6 +58,11 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
         with open(os.path.join(output_dir, f"{filename}_syllable_count.txt"), "w", encoding="utf-8") as f:
             syllable_count = count_syllables_in_words(file_content)
             f.write(f"Total number of syllables in the text: {syllable_count}")
+        with open(os.path.join(output_dir, f"{filename}_sentence_length.txt"), "w", encoding="utf-8") as f:
+            mean_length = get_sentence_complexity(file_content)
+            f.write(f"Mean number of letters and spaces: {mean_length:.2f}\n")
+            
+            
 
         print(f"Finished processing all functions for: {filepath}")
 
@@ -109,6 +114,11 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
             f.write(f"Total number of syllables in the text: {syllable_count}")
         print(f"Finished syllable count for: {filepath}")
 
+    elif function_name == "sentence_length":
+        with open(os.path.join(output_dir, f"{filename}_sentence_length.txt"), "w", encoding="utf-8") as f:
+            mean_length = get_sentence_complexity(file_content)
+            f.write(f"Mean number of letters and spaces: {mean_length:.2f}\n")
+        print(f"Finished sentence length for: {filepath}")
     else:
         print(f"Error: Invalid function name: {function_name}")
 
