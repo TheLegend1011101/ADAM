@@ -75,11 +75,19 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
     if should_run("syllable_count"):
         results["syllable_count"] = count_syllables_in_words(file_content)
 
+    if should_run("sentence_lenght"):
+        sentence_data, mean_length = get_sentence_complexity(file_content)
+        results["sentence_lenght"] ={
+            "mean_length": mean_length,
+            "sentence_data": sentence_data
+        }
+        results["sentence_length"] = get_sentence_complexity(file_content)
+
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
 
-    else:
-        print(f"Error: Invalid function name: {function_name}")
+    print(f"Saved results to {output_path}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
