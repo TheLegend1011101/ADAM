@@ -12,13 +12,15 @@ def calculate_word_rareness_wordfreq(word, lang='en'):
 
 def text_rareness_score(text, lang='en'):
 
-    words = text.split()
+    words = sorted(list(set(text.lower().split()))) 
     rareness_scores = []
     valid_rareness_values = []
 
     for word in words:
         rareness = calculate_word_rareness_wordfreq(word, lang)
-        rareness_scores.append((word, rareness)) 
+        rareness_output = "Infinity" if rareness == float('inf') else rareness
+        rareness_scores.append((word, rareness_output))
+        # rareness_scores.append((word, rareness)) 
         if rareness != float('inf'):
             valid_rareness_values.append(rareness)
 
