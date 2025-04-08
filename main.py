@@ -61,8 +61,6 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
         with open(os.path.join(output_dir, f"{filename}_sentence_length.txt"), "w", encoding="utf-8") as f:
             mean_length = get_sentence_complexity(file_content)
             f.write(f"Mean number of letters and spaces: {mean_length:.2f}\n")
-            
-            
 
         print(f"Finished processing all functions for: {filepath}")
 
