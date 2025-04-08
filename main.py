@@ -2,7 +2,7 @@ import sys
 import os
 import json
 import re
-from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words
+from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity
 
 def clean_text(text):
     # Remove punctuation
@@ -78,8 +78,8 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
 
-    print(f"Saved results to {output_path}")
-
+    else:
+        print(f"Error: Invalid function name: {function_name}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
