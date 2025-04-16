@@ -1,5 +1,6 @@
 from wordfreq import word_frequency
 import re
+import math
 
 def calculate_word_rareness_wordfreq(word, lang='en'):
 
@@ -8,7 +9,9 @@ def calculate_word_rareness_wordfreq(word, lang='en'):
         return 6
     else:
         rareness_score = 1 / frequency
-        scaled_score = min(6, 0.10 + (rareness_score / 1000000)) 
+        rareness_score = 1 / frequency
+        log_rareness = math.log10(rareness_score)
+        scaled_score = min(6, max(0.1, (log_rareness / 8) * 6))
         return scaled_score
 
 def text_rareness_score(text, lang='en'):
@@ -25,3 +28,4 @@ def text_rareness_score(text, lang='en'):
         return average_rareness, rareness_scores
     else:
         return 0, rareness_scores
+
