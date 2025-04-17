@@ -7,3 +7,4 @@ from .decode_demand import *
 from .sight_word import *
 from .syllable_count import *
 from .sentence_length import *
+from .grammar import *

@@ -40,7 +40,7 @@ def get_sentence_complexity(text):
     for data in sentence_data:
         data["complexity_score"] = 1 if data["num_chars"] < mean_chars else 1.5  
 
-    return sentence_data, mean_chars
+    return mean_chars
 
 #text = "This is a short sentence. Here is a longer sentence with more words! A very tiny one?"
 # sentence_info, mean_length = get_sentence_complexity(text)

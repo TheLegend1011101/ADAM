@@ -1,7 +1,7 @@
 import sys
 import os
 import re
-from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity
+from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity,analyze_dependency_links
 
 def clean_text(text):
     # Remove punctuation
@@ -61,6 +61,9 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
         with open(os.path.join(output_dir, f"{filename}_sentence_length.txt"), "w", encoding="utf-8") as f:
             mean_length = get_sentence_complexity(file_content)
             f.write(f"Mean number of letters and spaces: {mean_length:.2f}\n")
+        with open(os.path.join(output_dir, f"{filename}_grammar.txt"), "w", encoding="utf-8") as f:
+            mean_link = analyze_dependency_links(file_content)
+            f.write(f"Mean Link Count: {mean_link:.2f}")
 
         print(f"Finished processing all functions for: {filepath}")
 
@@ -117,8 +120,12 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
             mean_length = get_sentence_complexity(file_content)
             f.write(f"Mean number of letters and spaces: {mean_length:.2f}\n")
         print(f"Finished sentence length for: {filepath}")
-    else:
-        print(f"Error: Invalid function name: {function_name}")
+    elif function_name == "grammar":
+        with open(os.path.join(output_dir, f"{filename}_grammar.txt"), "w", encoding="utf-8") as f:
+            mean_link = analyze_dependency_links(file_content)
+            f.write(f"Mean Link Count: {mean_link:.2f}")
+        print(f"Finished grammar for: {filepath}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -132,3 +139,91 @@ if __name__ == "__main__":
     output_dir = sys.argv[3] if len(sys.argv) > 3 else "output"
 
     process_file_content(filepath, function_name, output_dir)
+
+# import sys
+# import os
+# import re
+# import pandas as pd
+# from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity,analyze_dependency_links
+
+# def clean_text(text):
+#     # Remove punctuation
+#     text = re.sub(r'[^\w\s]', '', text)
+#     # Convert to lowercase
+#     text = text.lower()
+#     # Remove extra spaces
+#     text = re.sub(r'\s+', ' ', text).strip()
+#     return text
+
+# def process_passage(filepath):
+#     """Processes a single passage and returns a dictionary of results."""
+#     results = {}
+#     try:
+#         with open(filepath, "r", encoding="utf-8") as f:
+#             file_content = f.read()
+#             cleaned_content = clean_text(file_content)
+
+#             results["abstract"] = text_abstract_ratio(cleaned_content)
+#             results["miop"] = compute_miop_chunks(cleaned_content)[1]
+#             orthographic = analyze_text_orthographic_similarity(cleaned_content)
+#             results["levenshtein_dist"] = orthographic[0]
+#             results["mean_levenshtein_dist"] = orthographic[1]
+#             rareness = text_rareness_score(cleaned_content)
+#             results["avg_rareness"] = rareness[0]
+#             results["individual_rareness"] = rareness[1]
+#             results["aoa"] = calculate_aoa(cleaned_content)
+#             results["decoding_demand"] = decoding_demand(cleaned_content)[0]
+#             results["sight_word_count"] = count_sight_words(cleaned_content)
+#             results["syllable_count"] = count_syllables_in_words(cleaned_content)
+#             results["sentence_length"] = get_sentence_complexity(cleaned_content)
+#             results["grammar"] = analyze_dependency_links(cleaned_content) 
+ 
+#     except IOError:
+#         print(f"Error: Could not read file: {filepath}")
+#         return None
+#     return results
+
+# def process_directory_to_dataframe(directory_path):
+#     """Processes all text files in a directory and returns a Pandas DataFrame."""
+#     all_results = {}
+#     passage_files = sorted([f for f in os.listdir(directory_path) if f.endswith(".txt")])
+#     data = {}
+#     algorithms = ["abstract", "miop", "levenshtein_dist", "mean_levenshtein_dist", "avg_rareness", "aoa", "decoding_demand", "sight_word_count", "syllable_count", "sentence_length" , "grammar"]
+
+#     for filename in passage_files:
+#         filepath = os.path.join(directory_path, filename)
+#         print(f"Processing: {filepath}")
+#         results = process_passage(filepath)
+#         if results:
+#             passage_name = os.path.splitext(filename)[0]
+#             data[passage_name] = {algo: results.get(algo) for algo in algorithms}
+
+#     df = pd.DataFrame.from_dict(data, orient='index')
+#     df.index.name = 'Passage'
+#     return df
+
+# if __name__ == "__main__":
+#     if len(sys.argv) < 2:
+#         print(f"Usage: python {sys.argv[0]} <directory_path_containing_text_files> [output_filename.csv (optional)]")
+#         sys.exit(1)
+
+#     directory_path = sys.argv[1]
+#     if not os.path.isdir(directory_path):
+#         print(f"Error: Invalid directory path: {directory_path}")
+#         sys.exit(1)
+
+#     df_output = process_directory_to_dataframe(directory_path)
+#     print("\nDataFrame Output:")
+#     print(df_output)
+
+#     # Save the DataFrame to a CSV file
+#     output_filename = "all_passages_analysis_book2.csv"  # Default filename
+#     df_output.to_csv(output_filename)
+    # if len(sys.argv) > 2:
+    #     output_filename = sys.argv[2]
+
+    # try:
+    #     df_output.to_csv(output_filename, encoding='utf-8', index=True)
+    #     print(f"\nDataFrame saved to: {output_filename}")
+    # except Exception as e:
+    #     print(f"Error saving DataFrame to CSV: {e}")
