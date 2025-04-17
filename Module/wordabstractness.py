@@ -1,5 +1,4 @@
 import pandas as pd
-import re
 from pathlib import Path
 from .auxiliary.modeljoiner import join_word2vec_parts
 model_path = Path(__file__).resolve().parent.parent / "data" / "word_concreteness.csv"
@@ -43,9 +42,6 @@ for word in concrete_words:
         X_train.append(word2vec_model[word])
         y_train.append(0)  
 
-clf = LogisticRegression()
-clf.fit(X_train, y_train)
-
 from sklearn.model_selection import train_test_split
 
 import numpy as np
@@ -57,48 +53,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 clf = LogisticRegression()
 clf.fit(X_train, y_train)
 
-
-y_pred = clf.predict(X_test)
-
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-
-
-
-
-# def strip_character(a_string):
-#     r = re.compile(r"[^a-zA-Z- ]")
-#     return r.sub(' ', a_string)
-
-# def remove_spaces(a_string):
-#     return re.sub(' +', ' ', a_string)
-
-# def remove_apos_s(a_string):
-#     return re.sub("'s", '', a_string)
-
-# def clean_input_text(input_text):
-#     # convert input to lowercase
-#     input_text = input_text.lower()
-#     # remove apostrophe-s from words
-#     input_text = remove_apos_s(input_text)
-#     # strip non-essential characters
-#     input_text = strip_character(input_text)
-#     # remove internal spaces
-#     input_text = remove_spaces(input_text)
-#     # remove end spaces
-#     input_text = input_text.strip()
-#     return input_text
-
-
-
-
 def is_abstract(word):
     if word in word2vec_model:
         vector = word2vec_model[word].reshape(1, -1)
         return clf.predict(vector)[0] == 1  
     return None  
+
+def get_true_label(conc_m, threshold=2.5):
+    return 1 if conc_m < threshold else 0
 
 def text_abstract_ratio(text):
     abstract_count = 0
@@ -109,7 +71,6 @@ def text_abstract_ratio(text):
             total_words += 1
             if is_abstract(word):
                 abstract_count += 1
-
     return (abstract_count / total_words * 700) if total_words > 0 else None  
 
 
