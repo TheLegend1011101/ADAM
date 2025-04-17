@@ -126,7 +126,6 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
             f.write(f"Mean Link Count: {mean_link:.2f}")
         print(f"Finished grammar for: {filepath}")
 
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(f"Usage: python {sys.argv[0]} <filepath> [function_name] [output_directory]")
