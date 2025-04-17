@@ -59,9 +59,6 @@ def is_abstract(word):
         return clf.predict(vector)[0] == 1  
     return None  
 
-def get_true_label(conc_m, threshold=2.5):
-    return 1 if conc_m < threshold else 0
-
 def text_abstract_ratio(text):
     abstract_count = 0
     total_words = 0
