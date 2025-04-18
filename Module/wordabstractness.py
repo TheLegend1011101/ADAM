@@ -83,28 +83,41 @@ def plot_logistic_regression_decision_boundary():
     """
     global clf, X_train, y_train  
     
-    
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_train)
 
-    
     plt.figure(figsize=(8, 6))
-    sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=y_train, palette={0: "blue", 1: "red"}, alpha=0.5)
+    scatter = sns.scatterplot(
+        x=X_pca[:, 0],
+        y=X_pca[:, 1],
+        hue=y_train,
+        palette={0: "blue", 1: "red"},
+        alpha=0.5
+    )
 
-    
     x_min, x_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1
     y_min, y_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100), np.linspace(y_min, y_max, 100))
-    
-    
+
     grid_points = np.c_[xx.ravel(), yy.ravel()]
-    Z = clf.predict(pca.inverse_transform(grid_points))  
+    Z = clf.predict(pca.inverse_transform(grid_points))
     Z = Z.reshape(xx.shape)
 
-    
     plt.contourf(xx, yy, Z, alpha=0.2, cmap="coolwarm")
     plt.xlabel("PCA Component 1")
     plt.ylabel("PCA Component 2")
-    plt.title("Logistic Regression Decision Boundary (PCA-reduced)")
-    plt.legend(["Concrete (Blue)", "Abstract (Red)"])
+    plt.title("Logistic Regression Decision Boundary")
+
+    
+    handles, labels = scatter.get_legend_handles_labels()
+
+
+    label_map = {"0": "Concrete", "1": "Abstract"}
+    mapped_labels = [label_map.get(label, label) for label in labels if label in label_map]
+
+
+    correct_handles = [h for h, l in zip(handles, labels) if l in label_map]
+
+    plt.legend(correct_handles, mapped_labels)
+
     plt.show()

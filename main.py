@@ -2,7 +2,7 @@ import sys
 import os
 import json
 import re
-from Module import text_abstract_ratio, text_rareness_score, compute_miop_chunks, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity, analyze_dependency_links
+from Module import text_abstract_ratio, text_rareness_score, calculate_orthographic_predictability, analyze_text_orthographic_similarity,calculate_aoa,decoding_demand,count_sight_words,count_syllables_in_words,get_sentence_complexity, analyze_dependency_links
 
 def clean_text(text):
     # Remove punctuation
@@ -42,8 +42,10 @@ def process_file_content(filepath, function_name=None, output_dir="output"):
         results["abstract"] = text_abstract_ratio(file_content)
 
     if should_run("miop"):
-        _, miop_score = compute_miop_chunks(file_content)
-        results["miop"] = miop_score
+        miop_score, _ = calculate_orthographic_predictability(file_content, chunk_size=15)
+        results["miop"] = {
+            "Overall MIOP": miop_score,
+            "MIOP BY CHUNK": _}
 
     if should_run("levenshtein"):
         lev_distance, mean_distance = analyze_text_orthographic_similarity(file_content)
